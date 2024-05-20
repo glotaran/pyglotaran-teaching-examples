@@ -1,0 +1,103 @@
+ci:
+  skip: [flake8]
+
+repos:
+  # Formatters
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: debug-statements
+      - id: fix-encoding-pragma
+        args: [--remove]
+
+  # Notebook tools
+  # - repo: https://github.com/kynan/nbstripout
+  #   rev: 0.7.1
+  #   hooks:
+  #     - id: nbstripout
+  #       args: [--drop-empty-cells]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.3.3
+    hooks:
+      - id: ruff
+        name: "ruff sort imports notebooks"
+        args:
+          - "--fix"
+          - "--select=I"
+          - "--config=.ruff-notebooks.toml"
+        alias: isort-notebooks
+        types_or: [jupyter]
+      - id: ruff-format
+        name: "ruff format notebooks"
+        types_or: [jupyter]
+        args:
+          - "--config=.ruff-notebooks.toml"
+        alias: format-notebooks
+      - id: ruff
+        name: "ruff lint notebooks"
+        types_or: [jupyter]
+        args:
+          - "--config=.ruff-notebooks.toml"
+        alias: check-notebooks
+
+  # Linters
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.9.0
+    hooks:
+      - id: mypy
+        exclude: ^docs
+        additional_dependencies: [types-all]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        name: "ruff sort imports"
+        args:
+          - "--fix"
+          - "--select=I"
+          - "-v"
+        alias: isort
+      - id: ruff-format
+      # Commands above are both formatters an not linters
+      # See also: https://github.com/astral-sh/ruff/discussions/7310#discussioncomment-7102010
+      - id: ruff
+        name: "ruff lint"
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        alias: flake8-docs
+        args:
+          - "--select=DOC"
+          - "--extend-ignore=DOC502"
+          - "--color=always"
+          - "--require-return-section-when-returning-nothing=False"
+          - "--allow-init-docstring=True"
+          - "--skip-checking-short-docstrings=False"
+        name: "flake8 lint docstrings"
+        exclude: "^(docs/|tests?/)"
+        additional_dependencies: [pydoclint==0.3.8]
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.6
+    hooks:
+      - id: codespell
+        types: [file]
+        types_or: [python, pyi, markdown, rst, jupyter]
+        args: ["--ignore-words-list=doas"]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: "v1.6.27"
+    hooks:
+      - id: actionlint
