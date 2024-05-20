@@ -73,22 +73,6 @@ repos:
       - id: ruff
         name: "ruff lint"
 
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
-    hooks:
-      - id: flake8
-        alias: flake8-docs
-        args:
-          - "--select=DOC"
-          - "--extend-ignore=DOC502"
-          - "--color=always"
-          - "--require-return-section-when-returning-nothing=False"
-          - "--allow-init-docstring=True"
-          - "--skip-checking-short-docstrings=False"
-        name: "flake8 lint docstrings"
-        exclude: "^(docs/|tests?/)"
-        additional_dependencies: [pydoclint==0.3.8]
-
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
     hooks:

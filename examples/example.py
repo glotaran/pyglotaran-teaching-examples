@@ -3,4 +3,4 @@
 from __future__ import annotations
 
 if __name__ == "__main__":
-    print(f"Ran from {__file__}")  # noqa: T201
+    print(f"Ran from {__file__}")
